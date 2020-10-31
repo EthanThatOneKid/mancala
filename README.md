@@ -1,2 +1,7 @@
-# mancala
-A group project implementing mancala in Matlab.
+# Mancala in Matlab 💎
+
+> A group project, for *Digital Computation*, implementing mancala in Matlab.
+
+---
+
+Created by Ethan, Benjamin, and Shawn
