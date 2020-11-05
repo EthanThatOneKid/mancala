@@ -5,18 +5,12 @@ pits = [
 store_1 = 0;
 store_2 = 0;
 
-is_player_1_turn = 1;
+current_player = 1;
 
 % Repeating until one row of pits is empty
 while sum(pits(1)) > 0 && sum(pits(2)) > 0
 
-    % Setting the current player
-    if is_player_1_turn
-        current_player = 1;
-    else
-        current_player = 2;
-    end
-    fprintf("\nPlayer %d's Turn...\n", current_player);
+    fprintf("\n--- Player %d's Turn ---\n", current_player);
     
     % Allowing the player to choose a pit
     pit_id = -1;
@@ -40,6 +34,10 @@ while sum(pits(1)) > 0 && sum(pits(2)) > 0
     fprintf("Player %d chose pit #%d.\n", current_player, pit_id);
     
     % Switching players at the end of the turn.
-    is_player_1_turn = ~is_player_1_turn;
+    if current_player == 1
+        current_player = 2;
+    else
+        current_player = 1;
+    end
 
 end
