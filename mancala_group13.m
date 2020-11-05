@@ -2,8 +2,7 @@ pits = [
     4, 4, 0, 4, 4, 4;
     4, 4, 4, 4, 4, 4
 ];
-store_1 = 0;
-store_2 = 0;
+stores = [0, 0];
 
 current_player = 1;
 
@@ -12,7 +11,7 @@ while sum(pits(1)) > 0 && sum(pits(2)) > 0
     
     fprintf("+---------------------------------------+\n");
     fprintf("|    | %02d | %02d | %02d | %02d | %02d | %02d |    |\n", pits(1, 1), pits(1, 2), pits(1, 3), pits(1, 4), pits(1, 5), pits(1, 6));
-    fprintf("| %02d |----|----|----|----|----|----| %02d |\n", store_1, store_2);
+    fprintf("| %02d |----|----|----|----|----|----| %02d |\n", stores(1), stores(2));
     fprintf("|    | %02d | %02d | %02d | %02d | %02d | %02d |    |\n", pits(2, 1), pits(2, 2), pits(2, 3), pits(2, 4), pits(2, 5), pits(2, 6));
     fprintf("+---------------------------------------+\n");
 
