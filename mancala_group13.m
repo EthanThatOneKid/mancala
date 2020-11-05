@@ -9,8 +9,14 @@ current_player = 1;
 
 % Repeating until one row of pits is empty
 while sum(pits(1)) > 0 && sum(pits(2)) > 0
+    
+    fprintf("+---------------------------------------+\n");
+    fprintf("|    | %02d | %02d | %02d | %02d | %02d | %02d |    |\n", pits(1, 1), pits(1, 2), pits(1, 3), pits(1, 4), pits(1, 5), pits(1, 6));
+    fprintf("| %02d |----|----|----|----|----|----| %02d |\n", store_1, store_2);
+    fprintf("|    | %02d | %02d | %02d | %02d | %02d | %02d |    |\n", pits(2, 1), pits(2, 2), pits(2, 3), pits(2, 4), pits(2, 5), pits(2, 6));
+    fprintf("+---------------------------------------+\n");
 
-    fprintf("\n--- Player %d's Turn ---\n", current_player);
+    fprintf("--- Player %d's Turn ---\n", current_player);
     
     % Allowing the player to choose a pit
     pit_id = -1;
