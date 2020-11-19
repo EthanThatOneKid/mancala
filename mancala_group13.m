@@ -50,6 +50,9 @@ while ~is_game_over
     else
         current_player = 1;
     end
+    
+    % Checking if the game is over...
+    % by checking if either row has no pebbles.
     is_game_over = sum(pits(1, 1:6)) == 0 ||...
        sum(pits(2, 1:6)) == 0;
 end
