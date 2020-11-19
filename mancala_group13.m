@@ -14,11 +14,11 @@ is_game_over = false;
 % Repeating until one row of pits is empty
 while ~is_game_over
     
-    fprintf("+---------------------------------------+\n");
-    fprintf("|    | %02d | %02d | %02d | %02d | %02d | %02d |    | <- Player 2\n", pits(2, 6), pits(2, 5), pits(2, 4), pits(2, 3), pits(2, 2), pits(2, 1));
-    fprintf("| %02d |----|----|----|----|----|----| %02d |\n", stores(2), stores(1));
-    fprintf("|    | %02d | %02d | %02d | %02d | %02d | %02d |    | <- Player 1\n", pits(1, 1), pits(1, 2), pits(1, 3), pits(1, 4), pits(1, 5), pits(1, 6));
-    fprintf("+---------------------------------------+\n");
+    fprintf("+---------------------------------------------------------------+\n");
+    fprintf("|    | %02d (6) | %02d (5) | %02d (4) | %02d (3) | %02d (2) | %02d (1) |    | <- Player 2\n", pits(2, 6), pits(2, 5), pits(2, 4), pits(2, 3), pits(2, 2), pits(2, 1));
+    fprintf("| %02d |--------|--------|--------|--------|--------|--------| %02d |\n", stores(2), stores(1));
+    fprintf("|    | %02d (1) | %02d (2) | %02d (3) | %02d (4) | %02d (5) | %02d (6) |    | <- Player 1\n", pits(1, 1), pits(1, 2), pits(1, 3), pits(1, 4), pits(1, 5), pits(1, 6));
+    fprintf("+---------------------------------------------------------------+\n");
 
     fprintf("--- Player %d's Turn ---\n", current_player);
     
