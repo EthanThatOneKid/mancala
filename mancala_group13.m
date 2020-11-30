@@ -41,8 +41,8 @@ end
 
 function play_mancala(game_mode_id)
     pits = [
-        4, 4, 4, 4, 4, 4;
-        0, 0, 0, 0, 0, 5 % 4, 4, 4, 4, 4, 4
+        1, 1, 1, 1, 1, 1;
+        1, 1, 1, 1, 1, 1
     ];
     stores = [0, 0];
     current_player = floor(rand * 2) + 1;
@@ -50,24 +50,7 @@ function play_mancala(game_mode_id)
     
     % Repeating until one row of pits is empty
     while ~is_game_over
-        clc;
-        fprintf("+---------------------------------------------------------------+\n");
-        fprintf("|    | %02d (6) | %02d (5) | %02d (4) | %02d (3) | %02d (2) | %02d (1) |    | <- Player 2\n", pits(2, 6), pits(2, 5), pits(2, 4), pits(2, 3), pits(2, 2), pits(2, 1));
-        fprintf("| %02d |--------|--------|--------|--------|--------|--------| %02d |\n", stores(2), stores(1));
-        fprintf("|    | %02d (1) | %02d (2) | %02d (3) | %02d (4) | %02d (5) | %02d (6) |    | <- Player 1\n", pits(1, 1), pits(1, 2), pits(1, 3), pits(1, 4), pits(1, 5), pits(1, 6));
-        fprintf("+---------------------------------------------------------------+\n");
-    
-        fprintf("--- Player %d's Turn ---\n", current_player);
-    
-        [pits, stores] = prompt_player(pits, stores, current_player);
-        
-        % Switching players at the end of the turn.
-        current_player = mod(current_player, 2) + 1;
-        
-        % Checking if the game is over...
-        % by checking if either row has no pebbles.
-        is_game_over = sum(pits(1, 1:6)) == 0 ||...
-           sum(pits(2, 1:6)) == 0;
+        [pits, stores, current_player, is_game_over] = manage_turn(pits, stores, current_player, game_mode_id);
     end
     
     score_1 = stores(1) + sum(pits(1, 1:6));
@@ -91,14 +74,42 @@ function play_mancala(game_mode_id)
         fprintf("|     --- DRAW ---      |\n");
     end
     fprintf("+-----------------------+\n");
-    response = input("Go to the main menu? (y/n) > ");
-    if response == "n"
-        quit();
+    response = input("Go to the main menu? (1 for yes, 0 for no) > ");
+    if response == 0
+        % New code request: error function.
+        % I want to use this function in order to terminate the program
+        % early if the player decides they are done playing.
+        error("Thank you for playing!!");
     end
     main_menu();
 end
 
-function [pits, stores] = prompt_player(pits, stores, current_player)
+function [pits, stores, current_player, is_game_over] = manage_turn(pits, stores, current_player, game_mode_id)
+    clc;
+    fprintf("+---------------------------------------------------------------+\n");
+    fprintf("|    | %02d (6) | %02d (5) | %02d (4) | %02d (3) | %02d (2) | %02d (1) |    | <- Player 2\n", pits(2, 6), pits(2, 5), pits(2, 4), pits(2, 3), pits(2, 2), pits(2, 1));
+    fprintf("| %02d |--------|--------|--------|--------|--------|--------| %02d |\n", stores(2), stores(1));
+    fprintf("|    | %02d (1) | %02d (2) | %02d (3) | %02d (4) | %02d (5) | %02d (6) |    | <- Player 1\n", pits(1, 1), pits(1, 2), pits(1, 3), pits(1, 4), pits(1, 5), pits(1, 6));
+    fprintf("+---------------------------------------------------------------+\n");
+    fprintf("--- Player %d's Turn ---\n", current_player);
+    if current_player == 2 && game_mode_id == 1
+        [pits, stores] = prompt_player(pits, stores, current_player, game_mode_id);
+    elseif current_player == 2 && game_mode_id == 2
+        [pits, stores] = take_easy_turn(pits, stores, current_player);
+    elseif current_player == 2 && game_mode_id == 3
+        [pits, stores] = take_hard_turn(pits, stores, current_player);
+    else
+        [pits, stores] = prompt_player(pits, stores, current_player, game_mode_id);
+    end
+    % Switching players at the end of the turn.
+    current_player = mod(current_player, 2) + 1;
+    % Checking if the game is over...
+    % by checking if either row has no pebbles.
+    is_game_over = sum(pits(1, 1:6)) == 0 ||...
+       sum(pits(2, 1:6)) == 0;
+end
+
+function [pits, stores] = prompt_player(pits, stores, current_player, game_mode_id)
     % Allowing the player to choose a pit.
     pit_id = -1;
     is_valid_pit = 0;
@@ -118,10 +129,10 @@ function [pits, stores] = prompt_player(pits, stores, current_player)
             fprintf("Pit #%d is invalid...\n", pit_id);
         end
     end
-    [pits, stores] = take_turn(pits, stores, current_player, pit_id);
+    [pits, stores] = take_turn(pits, stores, current_player, pit_id, game_mode_id);
 end
 
-function [pits, stores] = take_turn(pits, stores, current_player, pit_id)
+function [pits, stores] = take_turn(pits, stores, current_player, pit_id, game_mode_id)
     total_pebbles = pits(current_player, pit_id);
     current_row = current_player;
     pits(current_player, pit_id) = 0;
@@ -134,7 +145,7 @@ function [pits, stores] = take_turn(pits, stores, current_player, pit_id)
                 if i == total_pebbles
                     % The last pebble of the turn was placed in the current
                     % player's store, so they get to take another turn.
-                    [pits, stores] = prompt_player(pits, stores, current_player);
+                    [pits, stores] = manage_turn(pits, stores, current_player, game_mode_id);
                 end
             end
             pit_id = 0;
@@ -151,4 +162,21 @@ function [pits, stores] = take_turn(pits, stores, current_player, pit_id)
             end
         end
     end
+end
+
+function [pits, stores] = take_easy_turn(pits, stores, current_player)
+    fprintf("taking easy turn\n");
+    pit_id = -1;
+    is_valid_pit = 0;
+    while ~is_valid_pit
+        pit_id = floor(rand * 6) + 1;
+        if pits(current_player, pit_id) > 0
+            is_valid_pit = 1;
+        end
+    end
+    [pits, stores] = take_turn(pits, stores, current_player, pit_id, 2);
+end
+
+function [pits, stores] = take_hard_turn(pits, stores, current_player)
+    [pits, stores] = take_easy_turn(pits, stores, current_player);
 end
