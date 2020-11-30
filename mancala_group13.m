@@ -41,8 +41,8 @@ end
 
 function play_mancala(game_mode_id)
     pits = [
-        1, 1, 1, 1, 1, 1;
-        1, 1, 1, 1, 1, 1
+        4, 4, 4, 4, 4, 4;
+        4, 4, 4, 4, 4, 4
     ];
     stores = [0, 0];
     current_player = floor(rand * 2) + 1;
