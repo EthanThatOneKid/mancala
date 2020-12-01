@@ -22,28 +22,71 @@ function main_menu()
     fprintf("|    ---    Benjamin, and Shawn   ---    |\n");
     fprintf("|              Game Modes:               |\n");
     fprintf("|    1. PVP: Two players take turns.     |\n");
-    fprintf("|    2. EASY: One player VS an easy AI.  |\n");
-    fprintf("|    3. HARD: One player VS an hard AI.  |\n");
+    fprintf("|    2. CPU: One player VS an easy AI.   |\n");
+    fprintf("|                                        |\n");
     fprintf("+----------------------------------------+\n");
     is_valid_game_mode = 0;
     while ~is_valid_game_mode
-        game_mode_id = input("Select a game mode... (1-3) > ");
+        game_mode_id = input("Select a game mode... (1-2) > ");
         
-        % Making sure that the selected game mode is between 1 and 3.
-        if game_mode_id >= 1 && game_mode_id <= 3
+        % Making sure that the selected game mode is between 1 and 2.
+        if game_mode_id >= 1 && game_mode_id <= 2
             is_valid_game_mode = 1;
         else
             fprintf("Game mode #%d is invalid...\n", game_mode_id);
         end
     end
-    play_mancala(game_mode_id);
+    
+    clc;
+    fprintf("+----------------------------------------+\n");
+    fprintf("|  __  __     Welcome to...     _        |\n");
+    fprintf("| |  |/  |                     | |       |\n");
+    fprintf("| | |  / | __ _ _ __   ___ __ _| | __ _  |\n");
+    fprintf("| | ||/| |/ _` | '_ | / __/ _` | |/ _` | |\n");
+    fprintf("| | |  | | (_| | | | | (_| (_| | | (_| | |\n");
+    fprintf("| |_|  |_||__,_|_| |_||___|__,_|_||__,_| |\n");
+    fprintf("|    --- Implementation by Ethan, ---    |\n");
+    fprintf("|    ---    Benjamin, and Shawn   ---    |\n");
+    fprintf("|             Modifications:             |\n");
+    fprintf("|    1. No modifications (normal).       |\n");
+    fprintf("|    2. Longer board (12 pits per row).  |\n");
+    fprintf("|    3. Randomized pebble placement.     |\n");
+    fprintf("+----------------------------------------+\n");
+    is_valid_modification = 0;
+    while ~is_valid_modification
+        modification_id = input("Select a modification... (1-3) > ");
+   
+        % Making sure that the selected game mode is between 1 and 3.
+        if modification_id >= 1 && modification_id <= 3
+            is_valid_modification = 1;
+        else
+            fprintf("Modification #%d is invalid...\n", is_valid_modification);
+        end
+    end
+    
+    play_mancala(game_mode_id, modification_id);
 end
 
-function play_mancala(game_mode_id)
-    pits = [
-        4, 4, 4, 4, 4, 4;
-        4, 4, 4, 4, 4, 4
-    ];
+function play_mancala(game_mode_id, modification_id)
+    
+    if modification_id == 2
+        % 12 pits per row, with 2 pebbles each.
+        pits = 2 * ones(2, 12);
+    elseif modification_id == 3
+        % Randomize pebbles in pits, but start with 24 per row.
+        pits = zeros(2, 6);
+        for row=1:2
+            total_pebble_amount = 24;
+            while total_pebble_amount > 0
+                random_pit_id = floor(rand * 6) + 1;
+                pits(row, random_pit_id) = pits(row, random_pit_id) + 1;
+                total_pebble_amount = total_pebble_amount - 1;
+                fprintf("%d, %d\n", row, random_pit_id);
+            end
+        end
+    else
+        pits = 4 * ones(2, 6);
+    end
     stores = [0, 0];
     current_player = floor(rand * 2) + 1;
     is_game_over = false;
@@ -103,8 +146,8 @@ function [pits, stores, current_player, is_game_over] = manage_turn(pits, stores
     current_player = mod(current_player, 2) + 1;
     % Checking if the game is over...
     % by checking if either row has no pebbles.
-    is_game_over = sum(pits(1, 1:6)) == 0 ||...
-       sum(pits(2, 1:6)) == 0;
+    is_game_over = sum(pits(1, 1:end)) == 0 ||...
+       sum(pits(2, 1:end)) == 0;
 end
 
 function [pits, stores] = prompt_player(pits, stores, current_player, game_mode_id)
@@ -114,8 +157,9 @@ function [pits, stores] = prompt_player(pits, stores, current_player, game_mode_
     while ~is_valid_pit
         pit_id = input("Choose a pit... (1-6) > ");
 
-        % Making sure that the selected pit is between 1 and 6.
-        if pit_id >= 1 && pit_id <= 6
+        % Making sure that the selected pit is between 1 and the last pit.
+        [~, last_pit_id] = size(pits);
+        if pit_id >= 1 && pit_id <= last_pit_id
 
             % Making sure that the selected pit is not empty.
             if pits(current_player, pit_id) > 0
