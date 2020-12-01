@@ -76,10 +76,8 @@ function play_mancala(game_mode_id)
     fprintf("+-----------------------+\n");
     response = input("Go to the main menu? (1 for yes, 0 for no) > ");
     if response == 0
-        % New code request: error function.
-        % I want to use this function in order to terminate the program
-        % early if the player decides they are done playing.
-        error("Thank you for playing!!");
+        fprintf("Thank you for playing!!\n");
+        return;
     end
     main_menu();
 end
@@ -165,7 +163,6 @@ function [pits, stores] = take_turn(pits, stores, current_player, pit_id, game_m
 end
 
 function [pits, stores] = take_easy_turn(pits, stores, current_player)
-    fprintf("taking easy turn\n");
     pit_id = -1;
     is_valid_pit = 0;
     while ~is_valid_pit
@@ -178,5 +175,6 @@ function [pits, stores] = take_easy_turn(pits, stores, current_player)
 end
 
 function [pits, stores] = take_hard_turn(pits, stores, current_player)
+    % TODO: Implement a hard-level algorithm.
     [pits, stores] = take_easy_turn(pits, stores, current_player);
 end
