@@ -1,7 +1,12 @@
 % mancala_group13.m
 % Author: Ethan Davidson, Shawn Ta, and Benjamin Jones
-% Date modified: 11/18/2020
+% Date modified: 12/3/2020
 % Description: Mancala game simulator.
+
+% Enhancements:
+% 1. Playing against a CPU.
+% 2. Longer board modification.
+% 3. Random pebble placement modification.
 
 main_menu();
 
@@ -12,17 +17,16 @@ function main_menu()
     clc;
 
     fprintf("+----------------------------------------+\n");
-    fprintf("|  __  __     Welcome to...     _        |\n");
-    fprintf("| |  |/  |                     | |       |\n");
-    fprintf("| | |  / | __ _ _ __   ___ __ _| | __ _  |\n");
-    fprintf("| | ||/| |/ _` | '_ | / __/ _` | |/ _` | |\n");
-    fprintf("| | |  | | (_| | | | | (_| (_| | | (_| | |\n");
-    fprintf("| |_|  |_||__,_|_| |_||___|__,_|_||__,_| |\n");
+    fprintf("|           Welcome to...       _        |\n");
+    fprintf("|   /\\/\\   __ _ _ __   ___ __ _| | __ _  |\n");
+    fprintf("|  /    \\ / _` | '_ \\ / __/ _` | |/ _` | |\n");
+    fprintf("| / /\\/\\ \\ (_| | | | | (_| (_| | | (_| | |\n");
+    fprintf("| \\/    \\/\\__,_|_| |_|\\___\\__,_|_|\\__,_| |\n");
     fprintf("|    --- Implementation by Ethan, ---    |\n");
     fprintf("|    ---    Benjamin, and Shawn   ---    |\n");
     fprintf("|              Game Modes:               |\n");
     fprintf("|    1. PVP: Two players take turns.     |\n");
-    fprintf("|    2. CPU: One player VS an easy AI.   |\n");
+    fprintf("|    2. CPU: One player VS a CPU.        |\n");
     fprintf("|                                        |\n");
     fprintf("+----------------------------------------+\n");
     is_valid_game_mode = 0;
@@ -39,12 +43,11 @@ function main_menu()
     
     clc;
     fprintf("+----------------------------------------+\n");
-    fprintf("|  __  __     Welcome to...     _        |\n");
-    fprintf("| |  |/  |                     | |       |\n");
-    fprintf("| | |  / | __ _ _ __   ___ __ _| | __ _  |\n");
-    fprintf("| | ||/| |/ _` | '_ | / __/ _` | |/ _` | |\n");
-    fprintf("| | |  | | (_| | | | | (_| (_| | | (_| | |\n");
-    fprintf("| |_|  |_||__,_|_| |_||___|__,_|_||__,_| |\n");
+    fprintf("|           Welcome to...       _        |\n");
+    fprintf("|   /\\/\\   __ _ _ __   ___ __ _| | __ _  |\n");
+    fprintf("|  /    \\ / _` | '_ \\ / __/ _` | |/ _` | |\n");
+    fprintf("| / /\\/\\ \\ (_| | | | | (_| (_| | | (_| | |\n");
+    fprintf("| \\/    \\/\\__,_|_| |_|\\___\\__,_|_|\\__,_| |\n");
     fprintf("|    --- Implementation by Ethan, ---    |\n");
     fprintf("|    ---    Benjamin, and Shawn   ---    |\n");
     fprintf("|             Modifications:             |\n");
@@ -115,31 +118,56 @@ function play_mancala(game_mode_id, modification_id)
     end
     fprintf("+-----------------------+\n");
     response = input("Go to the main menu? (1 for yes, 0 for no) > ");
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if response == 0
         fprintf("Thank you for playing!!\n");
         return;
     end
     main_menu();
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 end
 
 function [pits, stores, current_player, is_game_over] = manage_turn(pits, stores, current_player, game_mode_id)
     clc;
-    if game_mode_id == 2
-        % Print a longer board
+    [~, last_pit_id] = size(pits);
+    if last_pit_id == 6
+        fprintf("+---------------------------------------------------------------------+\n");
     else
-        fprintf("+---------------------------------------------------------------+\n");
-        fprintf("|    | %02d (6) | %02d (5) | %02d (4) | %02d (3) | %02d (2) | %02d (1) |    | <- Player 2\n", pits(2, 6), pits(2, 5), pits(2, 4), pits(2, 3), pits(2, 2), pits(2, 1));
-        fprintf("| %02d |--------|--------|--------|--------|--------|--------| %02d |\n", stores(2), stores(1));
-        fprintf("|    | %02d (1) | %02d (2) | %02d (3) | %02d (4) | %02d (5) | %02d (6) |    | <- Player 1\n", pits(1, 1), pits(1, 2), pits(1, 3), pits(1, 4), pits(1, 5), pits(1, 6));
-        fprintf("+---------------------------------------------------------------+\n");
+        fprintf("+---------------------------------------------------------------------------------------------------------------------------------+\n");
+    end
+    fprintf("|        ");
+    for i=1:last_pit_id
+        fprintf("<-        ");
+    end
+    fprintf(" |\n|    ");
+    for i=1:last_pit_id
+        current_pit_id = last_pit_id - i + 1;
+        fprintf("| %02d (%02d) ", pits(2, current_pit_id), current_pit_id);
+    end
+    fprintf("|    | <- Player 2\n");
+    fprintf("| %02d ", stores(2));
+    for i=1:last_pit_id
+        fprintf("|---------");
+    end
+    fprintf("| %02d |\n", stores(1));
+    fprintf("|    ");
+    for i=1:last_pit_id
+        fprintf("| %02d (%02d) ", pits(1, i), i);
+    end
+    fprintf("|    | <- Player 1\n");
+    fprintf("|        ");
+    for i=1:last_pit_id
+        fprintf("->        ");
+    end
+    fprintf(" |\n");
+    if last_pit_id == 6
+        fprintf("+---------------------------------------------------------------------+\n");
+    else
+        fprintf("+---------------------------------------------------------------------------------------------------------------------------------+\n");
     end
     fprintf("--- Player %d's Turn ---\n", current_player);
     if current_player == 2 && game_mode_id == 1 % Take player 2's turn.
         [pits, stores] = prompt_player(pits, stores, current_player, game_mode_id);
     elseif current_player == 2 && game_mode_id == 2 % Take the CPU's turn.
-        [pits, stores] = take_easy_turn(pits, stores, current_player);
+        [pits, stores] = take_cpu_turn(pits, stores, current_player);
     else
         [pits, stores] = prompt_player(pits, stores, current_player, game_mode_id);
     end
@@ -157,9 +185,8 @@ function [pits, stores] = prompt_player(pits, stores, current_player, game_mode_
     is_valid_pit = 0;
     [~, last_pit_id] = size(pits);
     while ~is_valid_pit
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        pit_id = input("Choose a pit... (1-%d) > ", last_pit_id);
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        fprintf("Choose between (1-%d)\n", last_pit_id);
+        pit_id = input("Choose a pit ---> ");
         % Making sure that the selected pit is between 1 and the last pit.
         if pit_id >= 1 && pit_id <= last_pit_id
             % Making sure that the selected pit is not empty.
@@ -179,35 +206,42 @@ function [pits, stores] = take_turn(pits, stores, current_player, pit_id, game_m
     total_pebbles = pits(current_player, pit_id);
     current_row = current_player;
     pits(current_player, pit_id) = 0;
-    for i=1:total_pebbles
+    [~, last_pit_id] = size(pits);
+    current_pit_index = 1;
+    while total_pebbles > 0
         pit_id = pit_id + 1;
-        if pit_id == 7
+        if pit_id == last_pit_id + 1
             if current_player == current_row
                 % Only place pebble in current player's store.
                 stores(current_row) = stores(current_row) + 1;
-                if i == total_pebbles
+                if current_pit_index == total_pebbles
                     % The last pebble of the turn was placed in the current
                     % player's store, so they get to take another turn.
                     [pits, stores] = manage_turn(pits, stores, current_player, game_mode_id);
                 end
+            else
+                total_pebbles = total_pebbles + 1;
             end
             pit_id = 0;
-            current_row = mod(current_player, 2) + 1;
+            current_row = mod(current_row, 2) + 1;
         else
             pits(current_row, pit_id) = pits(current_row, pit_id) + 1;
-            if pits(current_row, pit_id) == 1 && i == total_pebbles
+            if pits(current_row, pit_id) == 1 && current_pit_index == total_pebbles
                 % Definition of opposite pit:
                 % 1->6, 2->5, 3->4, 4->3, 5->2, 6->1
-                opposite_pit_id = 7 - pit_id;
-                pits(current_row, pit_id) = pits(current_row, pit_id) +...
-                    pits(mod(current_row, 2) + 1, opposite_pit_id);
-                pits(mod(current_row, 2) + 1, opposite_pit_id) = 0;
+                opposite_pit_id = last_pit_id - pit_id + 1;
+                opposite_row = mod(current_row, 2) + 1; % 1 -> 2, 2 -> 1
+                stores(current_player) = stores(current_player) + pits(opposite_row, opposite_pit_id) + 1;
+                pits(opposite_row, opposite_pit_id) = 0;
+                pits(current_row, pit_id) = 0;
             end
         end
+        total_pebbles = total_pebbles - 1;
+        current_pit_index = current_pit_index + 1;
     end
 end
 
-function [pits, stores] = take_easy_turn(pits, stores, current_player)
+function [pits, stores] = take_cpu_turn(pits, stores, current_player)
     pit_id = -1;
     is_valid_pit = 0;
     [~, last_pit_id] = size(pits);
