@@ -31,13 +31,13 @@ function main_menu()
     fprintf("+----------------------------------------+\n");
     is_valid_game_mode = 0;
     while ~is_valid_game_mode
-        game_mode_id = input("Select a game mode... (1-2) > ");
+        game_mode_id = input("[Select a game mode (1-2)] > ");
         
         % Making sure that the selected game mode is between 1 and 2.
         if game_mode_id >= 1 && game_mode_id <= 2
             is_valid_game_mode = 1;
         else
-            fprintf("Game mode #%d is invalid...\n", game_mode_id);
+            fprintf("[Game mode #%d is invalid]\n", game_mode_id);
         end
     end
     
@@ -57,13 +57,13 @@ function main_menu()
     fprintf("+----------------------------------------+\n");
     is_valid_modification = 0;
     while ~is_valid_modification
-        modification_id = input("Select a modification... (1-3) > ");
+        modification_id = input("[Select a modification (1-3)] > ");
    
         % Making sure that the selected game mode is between 1 and 3.
         if modification_id >= 1 && modification_id <= 3
             is_valid_modification = 1;
         else
-            fprintf("Modification #%d is invalid...\n", is_valid_modification);
+            fprintf("[Modification #%d is invalid]\n", is_valid_modification);
         end
     end
     
@@ -117,9 +117,9 @@ function play_mancala(game_mode_id, modification_id)
         fprintf("|     --- DRAW ---      |\n");
     end
     fprintf("+-----------------------+\n");
-    response = input("Go to the main menu? (1 for yes, 0 for no) > ");
+    response = input("[Go to the main menu? (1 for yes, 0 for no)] > ");
     if response == 0
-        fprintf("Thank you for playing!!\n");
+        fprintf("[Thank you for playing!!]\n");
         return;
     end
     main_menu();
@@ -163,7 +163,7 @@ function [pits, stores, current_player, is_game_over] = manage_turn(pits, stores
     else
         fprintf("+---------------------------------------------------------------------------------------------------------------------------------+\n");
     end
-    fprintf("--- Player %d's Turn ---\n", current_player);
+    fprintf("[Player %d's Turn]\n", current_player);
     if current_player == 2 && game_mode_id == 1 % Take player 2's turn.
         [pits, stores] = prompt_player(pits, stores, current_player, game_mode_id);
     elseif current_player == 2 && game_mode_id == 2 % Take the CPU's turn.
@@ -185,18 +185,22 @@ function [pits, stores] = prompt_player(pits, stores, current_player, game_mode_
     is_valid_pit = 0;
     [~, last_pit_id] = size(pits);
     while ~is_valid_pit
-        fprintf("Choose between (1-%d)\n", last_pit_id);
-        pit_id = input("Choose a pit ---> ");
-        % Making sure that the selected pit is between 1 and the last pit.
-        if pit_id >= 1 && pit_id <= last_pit_id
-            % Making sure that the selected pit is not empty.
-            if pits(current_player, pit_id) > 0
-                is_valid_pit = 1;
+        fprintf("[Choose between (1-%d)]\n", last_pit_id);
+        pit_id = input("[Choose a pit] ---> ");
+        % Making sure that input was numerical.
+        try
+            % Making sure that the selected pit is between 1 and the last pit.
+            if pit_id >= 1 && pit_id <= last_pit_id
+                % Making sure that the selected pit is not empty.
+                if pits(current_player, pit_id) > 0
+                    is_valid_pit = 1;
+                else
+                    fprintf("[Pit #%d is empty; choose another]\n", pit_id);
+                end
             else
-                fprintf("Pit #%d is empty; choose another...\n", pit_id);
+                fprintf("[Pit #%d is invalid]\n", pit_id);
             end
-        else
-            fprintf("Pit #%d is invalid...\n", pit_id);
+        catch
         end
     end
     [pits, stores] = take_turn(pits, stores, current_player, pit_id, game_mode_id);
