@@ -211,7 +211,6 @@ function [pits, stores] = take_turn(pits, stores, current_player, pit_id, game_m
     current_row = current_player;
     pits(current_player, pit_id) = 0;
     [~, last_pit_id] = size(pits);
-    current_pit_index = 1;
     while total_pebbles > 0
         pit_id = pit_id + 1;
         if pit_id == last_pit_id + 1
@@ -231,7 +230,7 @@ function [pits, stores] = take_turn(pits, stores, current_player, pit_id, game_m
             current_row = mod(current_row, 2) + 1;
         else
             pits(current_row, pit_id) = pits(current_row, pit_id) + 1;
-            if pits(current_row, pit_id) == 1 && current_pit_index == total_pebbles
+            if pits(current_row, pit_id) == 1 && total_pebbles == 1
                 % Definition of opposite pit:
                 % 1->6, 2->5, 3->4, 4->3, 5->2, 6->1
                 opposite_pit_id = last_pit_id - pit_id + 1;
@@ -242,7 +241,6 @@ function [pits, stores] = take_turn(pits, stores, current_player, pit_id, game_m
             end
         end
         total_pebbles = total_pebbles - 1;
-        current_pit_index = current_pit_index + 1;
     end
 end
 
