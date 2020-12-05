@@ -235,9 +235,11 @@ function [pits, stores] = take_turn(pits, stores, current_player, pit_id, game_m
                 % 1->6, 2->5, 3->4, 4->3, 5->2, 6->1
                 opposite_pit_id = last_pit_id - pit_id + 1;
                 opposite_row = mod(current_row, 2) + 1; % 1 -> 2, 2 -> 1
-                stores(current_player) = stores(current_player) + pits(opposite_row, opposite_pit_id) + 1;
-                pits(opposite_row, opposite_pit_id) = 0;
-                pits(current_row, pit_id) = 0;
+                if pits(opposite_row, opposite_pit_id) > 0
+                    stores(current_player) = stores(current_player) + pits(opposite_row, opposite_pit_id) + 1;
+                    pits(opposite_row, opposite_pit_id) = 0;
+                    pits(current_row, pit_id) = 0;
+                end
             end
         end
         total_pebbles = total_pebbles - 1;
