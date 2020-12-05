@@ -106,7 +106,7 @@ function play_mancala(game_mode_id, modification_id)
     if game_mode_id == 1
         fprintf("| Player  1 | Player  2 |\n");
     elseif game_mode_id == 2
-        fprintf("| Player  1 | AI (EASY) |\n");
+        fprintf("| Player  1 |    CPU    |\n");
     end
     fprintf("| score: %02d | score: %02d |\n", score_1, score_2);
     if score_1 > score_2
