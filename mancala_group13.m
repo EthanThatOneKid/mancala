@@ -217,7 +217,9 @@ function [pits, stores] = take_turn(pits, stores, current_player, pit_id, game_m
             if current_player == current_row
                 % Only place pebble in current player's store.
                 stores(current_row) = stores(current_row) + 1;
-                if total_pebbles == 1
+                if total_pebbles == 1 &&...
+                        sum(pits(1, 1:end)) > 0 &&...
+                        sum(pits(2, 1:end)) > 0
                     % The last pebble of the turn was placed in the current
                     % player's store, so they get to take another turn.
                     [pits, stores] = manage_turn(pits, stores, current_player, game_mode_id);
