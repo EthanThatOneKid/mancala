@@ -117,8 +117,8 @@ function play_mancala(game_mode_id, modification_id)
         fprintf("|     --- DRAW ---      |\n");
     end
     fprintf("+-----------------------+\n");
-    response = input("[Go to the main menu? (1 for yes, 0 for no)] > ");
-    if response == 0
+    response = input("[Go to the main menu? (Press [ENTER] for yes, type 'no' for no)] > ");
+    if response == "no"
         fprintf("[Thank you for playing!!]\n");
         return;
     end
